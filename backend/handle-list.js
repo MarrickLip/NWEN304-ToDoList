@@ -28,10 +28,11 @@ module.exports.postList = async (req, res) => {
     if (itemIsValid(req, res)) {
         const id = uuid();
         await db.query(`INSERT INTO todoapp.items VALUES ('${id}', '${req.title}', ${req.completed})`); // no SQL injection protection!
-        res.set('Location', `${req.hostname}/api/list/${id}`);
-        res.statusCode(201).send({
-            code: 200,
-            message: 'success',
-        })
+        res.set('Location', `${req.hostname}/api/list/${id}`)
+            .statusCode(201)
+            .send({
+                code: 200,
+                message: 'success',
+            })
     }
 };
