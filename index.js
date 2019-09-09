@@ -1,13 +1,15 @@
-const cool = require('cool-ascii-faces');
 const express = require('express');
 const path = require('path');
+
+const backendRouter = require('./backend/router');
 const PORT = process.env.PORT || 5000;
 
-express()
-    .use(express.static(path.join(__dirname, 'frontend')))
-    //.set('views', path.join(__dirname, 'views'))
-    //.set('view engine', 'ejs')
-    //.get('/', (req, res) => res.render('pages/index'))
-    // .get('/', (req, res) => res.send(cool()))
-    .get('/cool', (req, res) => res.send(cool()))
-    .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+app = express();
+
+// handle the frontend
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+// handle the backend
+app.use(backendRouter);
+
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
