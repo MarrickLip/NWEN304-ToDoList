@@ -4,8 +4,11 @@ const pool = new Pool({
     ssl: false
 });
 
+// CREATE SCHEMA todoapp;
+// CREATE TABLE todoapp.items (id text, title text, completed bool);
+// INSERT INTO todoapp.items VALUES ('d290f1ee-6c54-4b01-90e6-d701748f0851', 'Walk the dog', false);
+
 module.exports.queryDb = async (query) => {
     const client = await pool.connect();
-    await client.query("INSERT INTO todo_list VALUES ('d290f1ee-6c54-4b01-90e6-d701748f0851', 'Walk the dog', false);");
-    return await client.query("SELECT * FROM todo_list;");
+    return await client.query("SELECT * FROM todoapp.items;");
 };
