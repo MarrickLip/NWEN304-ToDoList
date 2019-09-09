@@ -8,7 +8,7 @@ const pool = new Pool({
 // CREATE TABLE todoapp.items (id text, title text, completed bool);
 // INSERT INTO todoapp.items VALUES ('d290f1ee-6c54-4b01-90e6-d701748f0851', 'Walk the dog', false);
 
-module.exports.queryDb = async (query) => {
+module.exports.query = async (query) => {
     const client = await pool.connect();
-    return await client.query("SELECT * FROM todoapp.items;");
+    return await client.query(query);
 };
