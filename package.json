@@ -4,5 +4,10 @@
   "main": "index.js",
   "repository": "https://github.com/MarrickLip/NWEN304-ToDoList.git",
   "author": "Marrick Lip <marricklip@me.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "cool-ascii-faces": "^1.3.4",
+    "express": "^4.17.1",
+    "path": "^0.12.7"
+  }
 }
