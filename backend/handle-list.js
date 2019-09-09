@@ -7,7 +7,7 @@ const itemIsValid = (req, res) => {
     if (validateItem(req.body)) {
         return true
     } else {
-        res.statusCode(400).send({
+        res.status(400).send({
             code: 400,
             message: 'todo item is not valid'
         });
@@ -25,14 +25,14 @@ module.exports.getList = async (req, res) => {
 };
 
 module.exports.postList = async (req, res) => {
+    console.log('res', res);
     if (itemIsValid(req, res)) {
         const id = uuid();
         await db.query(`INSERT INTO todoapp.items VALUES ('${id}', '${req.title}', ${req.completed})`); // no SQL injection protection!
-        res.set('Location', `${req.hostname}/api/list/${id}`)
-            .statusCode(201)
-            .send({
-                code: 200,
-                message: 'success',
-            })
+        res.set('Location', `${req.hostname}/api/list/${id}`);
+        res.status(201).send({
+            code: 200,
+            message: 'success',
+        })
     }
 };
