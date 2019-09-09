@@ -1,10 +1,10 @@
 
 const { queryDb } = require('./database');
-const idFormat = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
+const model = require('./model');
 
 const idIsValid = (req, res) => {
     const { id } = req.params;
-    if (idFormat.test(id)) {
+    if (model.idFormat.test(id)) {
         return true
     } else {
         res.status(400).send({

@@ -1,7 +1,10 @@
-const handleList  = require("./handle-list");
+const express = require('express');
+
+const handleList = require("./handle-list");
 const handleListId =  require("./handle-list-id");
 
-const router = require('express').Router();
+const router = express.Router();
+router.use(express.json());
 
 router.get('/api/list', handleList.getList);
 router.post('/api/list', handleList.postList);
