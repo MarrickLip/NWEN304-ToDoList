@@ -1,6 +1,6 @@
 const db = require('./database');
 
-module.exports.getList = (req, res) => {
+module.exports.getList = async (req, res) => {
     try {
         const response = await db.query('SELECT * FROM todoapp.items');
         res.send(response.rows);
