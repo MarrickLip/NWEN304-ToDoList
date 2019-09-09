@@ -1,11 +1,13 @@
+const handleList  = require("./handle-list");
+const handleListId =  require("./handle-list-id");
+
 const router = require('express').Router();
 
-const {postList} = require("./handle-list");
-const {getList} = require("./handle-list");
+router.get('/api/list', handleList.getList);
+router.post('/api/list', handleList.postList);
 
-router.get('/api', (req, res) => res.send('Yay!!'));
-
-router.get('/api/list', getList);
-router.post('/api/list', postList);
+router.get('/api/list/:id', handleListId.getListId);
+router.delete('/api/list/:id', handleListId.deleteListId);
+router.put('/api/list/:id', handleListId.putListId);
 
 module.exports = router;

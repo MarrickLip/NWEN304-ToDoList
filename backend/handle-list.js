@@ -1,7 +1,7 @@
 module.exports.getList = (req, res) => {
-  res('getList')
+  res.send('getList')
 };
 
 module.exports.postList = (req, res) => {
-    res('postList');
+    res.send('postList');
 };
