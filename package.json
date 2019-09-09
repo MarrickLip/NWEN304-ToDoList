@@ -1,0 +1,8 @@
+{
+  "name": "NWEN304-ToDoList",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/MarrickLip/NWEN304-ToDoList.git",
+  "author": "Marrick Lip <marricklip@me.com>",
+  "license": "MIT"
+}
