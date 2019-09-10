@@ -19,9 +19,7 @@ module.exports.getList = async (req, res) => {
     try {
         const response = await db.query('SELECT * FROM todoapp.items');
         res.send(response.rows);
-    } catch (e) {
-        res.sendStatus(500);
-    }
+    } catch (e) { res.sendStatus(500); }
 };
 
 module.exports.postList = async (req, res) => {
@@ -34,8 +32,6 @@ module.exports.postList = async (req, res) => {
                 code: 201,
                 message: 'success',
             })
-        } catch (e) {
-            res.sendStatus(500);
-        }
+        } catch (e) { res.sendStatus(500); }
     }
 };

@@ -20,8 +20,8 @@ const idExists = (req, res) => {
 };
 
 module.exports.getListId = async (req, res) => {
-    if (idIsValid(req, res) && idExists(req, res)) {
-        const results = await db.query(`SELECT * FROM todoapp.items WHERE id=${req.params.id};`);
+    if (idIsValid(req, res)) {
+        const results = await db.query(`SELECT * FROM todoapp.items WHERE id="${req.params.id}";`);
         res.send(results);
     }
 };
