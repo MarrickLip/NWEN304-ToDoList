@@ -1,5 +1,5 @@
 
-const { queryDb } = require('./database');
+const db = require('./database');
 const model = require('./model');
 
 const idIsValid = (req, res) => {
@@ -21,7 +21,7 @@ const idExists = (req, res) => {
 
 module.exports.getListId = async (req, res) => {
     if (idIsValid(req, res) && idExists(req, res)) {
-        const results = await queryDb('SELECT * FROM "todoapp"."items";');
+        const results = await db.query('SELECT * FROM todoapp.items;');
         res.send(results);
     }
 };

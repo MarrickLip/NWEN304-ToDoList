@@ -26,12 +26,16 @@ module.exports.getList = async (req, res) => {
 
 module.exports.postList = async (req, res) => {
     if (itemIsValid(req, res)) {
-        const id = uuid();
-        await db.query(`INSERT INTO todoapp.items VALUES ('${id}', '${req.body.title}', ${req.body.completed})`); // no SQL injection protection!
-        res.set('Location', `${req.hostname}/api/list/${id}`);
-        res.status(201).send({
-            code: 201,
-            message: 'success',
-        })
+        try {
+            const id = uuid();
+            await db.query(`INSERT INTO todoapp.items VALUES ('${id}', '${req.body.title}', ${req.body.completed})`); // no SQL injection protection!
+            res.set('Location', `${req.hostname}/api/list/${id}`);
+            res.status(201).send({
+                code: 201,
+                message: 'success',
+            })
+        } catch (e) {
+            res.sendStatus(500);
+        }
     }
 };
