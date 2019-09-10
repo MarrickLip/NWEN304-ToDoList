@@ -44,6 +44,20 @@ module.exports.deleteListId = async (req, res) => {
     }
 };
 
-module.exports.putListId = (req, res) => {
-    res.send('putListId')
+module.exports.putListId = async (req, res) => {
+    const item = req.body;
+    if (idIsValid(req, res) && await idExists(req, res)) {
+        if (model.validateItem(item)) {
+            await db.query(`UPDATE todoapp.items SET title='${item.title}', completed='${item.completed}' WHERE id = '${req.params.id}';`);
+            res.status(200).send({
+                code: 200,
+                message: 'success'
+            })
+        } else {
+            res.status(400).send({
+                code: 400,
+                message: 'todo item is not valid'
+            })
+        }
+    }
 };

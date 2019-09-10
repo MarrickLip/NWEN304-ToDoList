@@ -4,18 +4,14 @@ const pool = new Pool({
     ssl: false
 });
 
-// CREATE SCHEMA todoapp;
-// CREATE TABLE todoapp.items (id text, title text, completed bool);
-// INSERT INTO todoapp.items VALUES ('d290f1ee-6c54-4b01-90e6-d701748f0851', 'Walk the dog', false);
-
 module.exports.query = async (query) => {
     const client = await pool.connect();
-    return await client.query(query);
+    return client.query(query);
 };
 
 const buildTable = async () => {
     try {
-        await module.exports.query('SELECT * FROM todoapp.items');
+        await module.exports.query('SELECT * FROM todoapp.items;');
         console.log('Table already exists.');
     } catch (e) {
         console.log('Building table...');
@@ -25,4 +21,4 @@ const buildTable = async () => {
     }
 };
 
-buildTable();
+buildTable().then(r => {});
