@@ -16,22 +16,18 @@ const itemIsValid = (req, res) => {
 };
 
 module.exports.getList = async (req, res) => {
-    try {
-        const response = await db.query('SELECT * FROM todoapp.items');
-        res.send(response.rows);
-    } catch (e) { res.sendStatus(500); }
+    const response = await db.query('SELECT * FROM todoapp.items');
+    res.send(response.rows);
 };
 
 module.exports.postList = async (req, res) => {
     if (itemIsValid(req, res)) {
-        try {
-            const id = uuid();
-            await db.query(`INSERT INTO todoapp.items VALUES ('${id}', '${req.body.title}', ${req.body.completed})`); // no SQL injection protection!
-            res.set('Location', `${req.hostname}/api/list/${id}`);
-            res.status(201).send({
-                code: 201,
-                message: 'success',
-            })
-        } catch (e) { res.sendStatus(500); }
+        const id = uuid();
+        await db.query(`INSERT INTO todoapp.items VALUES ('${id}', '${req.body.title}', ${req.body.completed})`); // no SQL injection protection!
+        res.set('Location', `${req.hostname}/api/list/${id}`);
+        res.status(201).send({
+            code: 201,
+            message: 'success',
+        })
     }
 };

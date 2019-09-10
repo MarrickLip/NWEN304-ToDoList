@@ -34,8 +34,14 @@ module.exports.getListId = async (req, res) => {
     }
 };
 
-module.exports.deleteListId = (req, res) => {
-    res.send('deleteListId')
+module.exports.deleteListId = async (req, res) => {
+    if (idIsValid(req, res) && await idExists(req, res)) {
+        await db.query(`DELETE FROM todoapp.items WHERE id='${req.params.id}';`);
+        res.status(200).send({
+            code: 200,
+            message: 'success'
+        })
+    }
 };
 
 module.exports.putListId = (req, res) => {
