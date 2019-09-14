@@ -12,5 +12,6 @@ module.exports.errorHandling = (handler) => {
 module.exports.cors = (handler) => {
     return (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
+        handler(req, res);
     }
 };

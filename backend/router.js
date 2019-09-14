@@ -4,14 +4,14 @@ const handleList = require("./handle-list");
 const handleListId =  require("./handle-list-id");
 
 const mixins = require("./mixins");
-m = (handler) => mixins.errorHandling(mixins.cors(handler));
+const m = (handler) => mixins.errorHandling(mixins.cors(handler));
 
 const router = express.Router();
 router.use(express.json());
 
 router.options('/api/*', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers, Location');
     res.status(200);
     res.send();

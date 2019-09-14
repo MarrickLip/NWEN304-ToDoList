@@ -6,7 +6,11 @@ const pool = new Pool({
 
 module.exports.query = async (query) => {
     const client = await pool.connect();
-    return client.query(query);
+    console.log(`Sending query: ${query}`);
+
+    const response = client.query(query);
+    console.log(`Got response (${JSON.stringify(response).length} characters)`);
+    return response;
 };
 
 const buildTable = async () => {

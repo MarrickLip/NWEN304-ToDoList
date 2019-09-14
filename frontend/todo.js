@@ -1,5 +1,7 @@
 // MARRICK LIP 2019
 
+var ERROR_LOG = console.error.bind(console);
+
 // global variable which holds a reference to the to-do item to be deleted; initially null
 var performDelete = function(){ console.warn('performDelete', 'null') };
 // global variable holding reference to the item being edited
@@ -21,7 +23,26 @@ $(document).ready(function(e) {
 				var taskName = $('#task').val();
 				if (taskName === '') { return false; }
 
-				var taskHTML = '<li><span class="done">%</span>';
+				// var ERROR_LOG = console.error.bind(console); $.Ajax({
+				// 	NOTE:
+				// 	method: 'POST',
+				// 	url: 'http://localhost:8080/my_post_function/', data: JSON.stringify({
+				// 	task: task.find('.task').html() }),
+				// 	contentType: "application/json",
+				// 	dataType: "json" }).then(my_next_function, ERROR_LOG)
+				console.log($);
+				$.ajax({
+					method: 'POST',
+					url: '/api/list',
+					data: JSON.stringify({
+						title: taskName,
+						completed: false,
+					}),
+					contentType: 'application/json',
+					dataType: 'json'
+				}).then((resp) => console.log(resp), ERROR_LOG);
+
+				let taskHTML = '<li><span class="done">%</span>';
 				taskHTML += '<span class="delete">x</span>';
 				taskHTML += '<span class="edit">e</span>';
 				taskHTML += '<span class="task"></span></li>';
