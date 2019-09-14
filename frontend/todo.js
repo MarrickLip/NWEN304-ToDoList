@@ -7,7 +7,39 @@ var performDelete = function(){ console.warn('performDelete', 'null') };
 // global variable holding reference to the item being edited
 var editTarget = undefined;
 
+const updateTasks = async () => {
+	const allTasks = await $.ajax({
+		method: 'GET',
+		url: '/api/list',
+		contentType: 'application/json',
+		dataType: 'json'
+	});
+
+	const todoList = $('#todo-list');
+	const completedList = $('#completed-list');
+
+	todoList.empty();
+	completedList.empty();
+
+	for (let task of allTasks) {
+		let taskHTML = '<li><span class="done">%</span>';
+		taskHTML += '<span class="delete">x</span>';
+		taskHTML += '<span class="edit">e</span>';
+		taskHTML += '<span class="task"></span></li>';
+
+		const $newTask = $(taskHTML);
+		$newTask.find('.task').text(task.title);
+
+		if (task.completed) {
+			completedList.append($newTask)
+		} else {
+			todoList.append($newTask)
+		}
+	}
+};
+
 $(document).ready(function(e) {
+	updateTasks().then(r => console.log(r));
 	$('#add-todo').button({
 		icons: { primary: "ui-icon-circle-plus" }}).click(
 		function() {
@@ -23,14 +55,6 @@ $(document).ready(function(e) {
 				var taskName = $('#task').val();
 				if (taskName === '') { return false; }
 
-				// var ERROR_LOG = console.error.bind(console); $.Ajax({
-				// 	NOTE:
-				// 	method: 'POST',
-				// 	url: 'http://localhost:8080/my_post_function/', data: JSON.stringify({
-				// 	task: task.find('.task').html() }),
-				// 	contentType: "application/json",
-				// 	dataType: "json" }).then(my_next_function, ERROR_LOG)
-				console.log($);
 				$.ajax({
 					method: 'POST',
 					url: '/api/list',
@@ -40,19 +64,7 @@ $(document).ready(function(e) {
 					}),
 					contentType: 'application/json',
 					dataType: 'json'
-				}).then((resp) => console.log(resp), ERROR_LOG);
-
-				let taskHTML = '<li><span class="done">%</span>';
-				taskHTML += '<span class="delete">x</span>';
-				taskHTML += '<span class="edit">e</span>';
-				taskHTML += '<span class="task"></span></li>';
-				var $newTask = $(taskHTML);
-
-				$newTask.find('.task').text(taskName);
-				$newTask.hide();
-				$('#todo-list').prepend($newTask);
-				$newTask.show('clip',250).effect('highlight',1000);
-				$(this).dialog('close');
+				}).then(() => $(this).dialog('close'), ERROR_LOG);
 			},
 			"Cancel" : function () {
 				$(this).dialog('close');
