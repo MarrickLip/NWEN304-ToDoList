@@ -5,12 +5,13 @@ const pool = new Pool({
 });
 
 module.exports.query = async (query) => {
-    const client = await pool.connect();
-    console.log(`Sending query: ${query}`);
-
-    const response = client.query(query);
-    console.log(`Got response (${JSON.stringify(response).length} characters)`);
-    return response;
+    if (query.match(/;/g).length > 1) {
+        console.error('Possible SQL injection attack detected');
+        throw Error();
+    } else {
+        const client = await pool.connect();
+        return client.query(query);
+    }
 };
 
 const buildTable = async () => {

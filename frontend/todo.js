@@ -7,6 +7,8 @@ var performDelete = function(){ console.warn('performDelete', 'null') };
 // global variable holding reference to the item being edited
 var editTarget = undefined;
 
+let allTasks = [];
+
 const updateTasks = async () => {
 	const allTasks = await $.ajax({
 		method: 'GET',
@@ -22,7 +24,8 @@ const updateTasks = async () => {
 	completedList.empty();
 
 	for (let task of allTasks) {
-		let taskHTML = '<li><span class="done">%</span>';
+		let taskHTML = `<li id="${task.id}" title="${task.title}" completed="${task.completed}">`;
+		taskHTML += '<span class="done">%</span>';
 		taskHTML += '<span class="delete">x</span>';
 		taskHTML += '<span class="edit">e</span>';
 		taskHTML += '<span class="task"></span></li>';
@@ -39,7 +42,7 @@ const updateTasks = async () => {
 };
 
 $(document).ready(function(e) {
-	updateTasks().then(r => console.log(r));
+	updateTasks();
 	$('#add-todo').button({
 		icons: { primary: "ui-icon-circle-plus" }}).click(
 		function() {
@@ -51,9 +54,11 @@ $(document).ready(function(e) {
 		modal: true,
 		autoOpen: false,
 		buttons : {
-			"Add task" : function () {
+			"Add task" :  function () {
 				var taskName = $('#task').val();
-				if (taskName === '') { return false; }
+				if (taskName === '') {
+					return false;
+				}
 
 				$.ajax({
 					method: 'POST',
@@ -64,7 +69,7 @@ $(document).ready(function(e) {
 					}),
 					contentType: 'application/json',
 					dataType: 'json'
-				}).then(() => $(this).dialog('close'), ERROR_LOG);
+				}).then(() => updateTasks().then(() => $(this).dialog('close')));
 			},
 			"Cancel" : function () {
 				$(this).dialog('close');
@@ -72,14 +77,21 @@ $(document).ready(function(e) {
 		}
 	});
 
-	$('#todo-list').on('click', '.done', function() {
-		var $taskItem = $(this).parent('li');
-		$taskItem.slideUp(250, function() {
-			var $this = $(this);
-			$this.detach();
-			$('#completed-list').prepend($this);
-			$this.slideDown();
+	$('#todo-list').on('click', '.done', async function() {
+		const id = $(this).parent('li').attr('id');
+		const title = $(this).parent('li').attr('title');
+		await $.ajax({
+			method: 'PUT',
+			url: `/api/list/${id}`,
+			data: JSON.stringify({
+				title: title,
+				completed: true,
+			}),
+			contentType: 'application/json',
+			dataType: 'json'
 		});
+
+		await updateTasks();
 	});
 
 	$('.sortlist').sortable({
@@ -91,11 +103,13 @@ $(document).ready(function(e) {
 
 	$('.sortlist').on('click','.delete', function() {
 		// global variable which only gets used if applicable;
-		performDelete = () => {
-			console.log('performDelete', this);
-			$(this).parent('li').effect('puff', () => {
-				$(this).remove();
+		performDelete = async () => {
+			const id = $(this).parent('li').attr('id');
+			await $.ajax({
+				method: 'DELETE',
+				url: `/api/list/${id}`,
 			});
+			await updateTasks();
 		};
 
 		$('#confirm-delete').dialog('open');
@@ -119,8 +133,8 @@ $(document).ready(function(e) {
 
 	// implement editing
 	$('.sortlist').on('click','.edit', function() {
-		editTarget = $(this).parent('li').find('.task');
-		$('#task-edit').val(editTarget.text()); // set the dialog's default text to the current value
+		editTarget = $(this).parent('li');
+		$('#task-edit').val(editTarget.find('.task').text()); // set the dialog's default text to the current value
 		$('#edit-todo').dialog('open');
 	});
 
@@ -129,11 +143,28 @@ $(document).ready(function(e) {
 		modal: true,
 		autoOpen: false,
 		buttons : {
-			"Done": function() {
+			"Done":  function () {
 				var taskName = $('#task-edit').val();
-				if (taskName === '') { return false; }
-				editTarget.text(taskName);
-				$(this).dialog('close');
+				if (taskName === '') {
+					return false;
+				}
+
+				const id = editTarget.attr('id');
+				const completed = editTarget.attr('completed') === 'true';
+				$.ajax({
+					method: 'PUT',
+					url: `/api/list/${id}`,
+					data: JSON.stringify({
+						title: taskName,
+						completed: completed,
+					}),
+					contentType: 'application/json',
+					dataType: 'json'
+				}).then(() => {
+					updateTasks().then(() => {
+						$(this).dialog('close');
+					})
+				});
 			},
 			"Cancel" : function () {
 				$(this).dialog('close');
